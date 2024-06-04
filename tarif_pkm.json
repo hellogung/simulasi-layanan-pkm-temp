@@ -1,0 +1,460 @@
+{
+    "jenis_kawasan": [
+        {
+            "id": 1,
+            "title": "pemukiman",
+            "listrik": [
+                {
+                    "id": 1,
+                    "title": "<5.500 VA",
+                    "layanan": [
+                        {
+                            "id": 1,
+                            "title": "Pemilahan dan Pengumpulan Sampah",
+                            "tarif": 40500,
+                            "satuan": "Unit/Bulan"
+                        },
+                        {
+                            "id": 2,
+                            "title": "Pengangkutan Sampah",
+                            "tarif": 140,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 3,
+                            "title": "Pengolahan Sampah",
+                            "tarif": 217,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 4,
+                            "title": "Pengolahan PLTSa Merah Putih",
+                            "tarif": 468.1,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 5,
+                            "title": "Pemrosesan Akhir",
+                            "tarif": 249900,
+                            "satuan": "Ton"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "title": ">5.500 VA",
+                    "layanan": [
+                        {
+                            "id": 1,
+                            "title": "Pemilahan dan Pengumpulan Sampah",
+                            "tarif": 80200,
+                            "satuan": "Unit/Bulan"
+                        },
+                        {
+                            "id": 2,
+                            "title": "Pengangkutan Sampah",
+                            "tarif": 207,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 3,
+                            "title": "Pengolahan Sampah",
+                            "tarif": 217,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 4,
+                            "title": "Pengolahan PLTSa Merah Putih",
+                            "tarif": 468.1,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 5,
+                            "title": "Pemrosesan Akhir",
+                            "tarif": 249900,
+                            "satuan": "Ton"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "title": "perkantoran",
+            "listrik": [
+                {
+                    "id": 1,
+                    "title": "<6.600 VA",
+                    "layanan": [
+                        {
+                            "id": 1,
+                            "title": "Pengumpulan Sampah",
+                            "tarif": 193,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 2,
+                            "title": "Pengangkutan Sampah",
+                            "tarif": 140,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 3,
+                            "title": "Pengolahan Sampah",
+                            "tarif": 217,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 4,
+                            "title": "Pengolahan PLTSa Merah Putih",
+                            "tarif": 468.1,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 5,
+                            "title": "Pemrosesan Akhir",
+                            "tarif": 249900,
+                            "satuan": "Ton"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "title": ">6.600 VA",
+                    "layanan": [
+                        {
+                            "id": 1,
+                            "title": "Pengumpulan Sampah",
+                            "tarif": 275,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 2,
+                            "title": "Pengangkutan Sampah",
+                            "tarif": 207,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 3,
+                            "title": "Pengolahan Sampah",
+                            "tarif": 217,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 4,
+                            "title": "Pengolahan PLTSa Merah Putih",
+                            "tarif": 468.1,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 5,
+                            "title": "Pemrosesan Akhir",
+                            "tarif": 249900,
+                            "satuan": "Ton"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "title": "perdagangan dan jasa",
+            "listrik": [
+                {
+                    "id": 1,
+                    "title": "<6.600 VA",
+                    "skala_jenis_kawasan": [
+                        {
+                            "id": 1,
+                            "title": "Barang Jasa",
+                            "layanan": [
+                                {
+                                    "id": 1,
+                                    "title": "Pemilahan Sampah",
+                                    "tarif": 28900,
+                                    "satuan": "Unit/Bulan"
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "Pengumpulan Sampah",
+                                    "tarif": 41,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 3,
+                                    "title": "Pengangkutan Sampah",
+                                    "tarif": 140,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 4,
+                                    "title": "Pengolahan Sampah",
+                                    "tarif": 217,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 5,
+                                    "title": "Pemrosesan Akhir",
+                                    "tarif": 249900,
+                                    "satuan": "Ton"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 2,
+                            "title": "Restoran",
+                            "layanan": [
+                                {
+                                    "id": 1,
+                                    "title": "Pemilahan Sampah",
+                                    "tarif": 39500,
+                                    "satuan": "Unit/Bulan"
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "Pengumpulan Sampah",
+                                    "tarif": 41,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 3,
+                                    "title": "Pengangkutan Sampah",
+                                    "tarif": 140,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 4,
+                                    "title": "Pengolahan Sampah",
+                                    "tarif": 217,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 5,
+                                    "title": "Pemrosesan Akhir",
+                                    "tarif": 249900,
+                                    "satuan": "Ton"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 3,
+                            "title": "Hotel",
+                            "layanan": [
+                                {
+                                    "id": 1,
+                                    "title": "Pengumpulan Sampah",
+                                    "tarif": 168,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "Pengangkutan Sampah",
+                                    "tarif": 140,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 3,
+                                    "title": "Pengolahan Sampah",
+                                    "tarif": 217,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 4,
+                                    "title": "Pemrosesan Akhir",
+                                    "tarif": 249900,
+                                    "satuan": "Ton"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "title": ">6.600 VA",
+                    "skala_jenis_kawasan": [
+                        {
+                            "id": 1,
+                            "title": "Barang Jasa",
+                            "layanan": [
+                                {
+                                    "id": 1,
+                                    "title": "Pemilahan Sampah",
+                                    "tarif": 28900,
+                                    "satuan": "Unit/Bulan"
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "Pengumpulan Sampah",
+                                    "tarif": 82,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 3,
+                                    "title": "Pengangkutan Sampah",
+                                    "tarif": 207,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 4,
+                                    "title": "Pengolahan Sampah",
+                                    "tarif": 217,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 5,
+                                    "title": "Pemrosesan Akhir",
+                                    "tarif": 249900,
+                                    "satuan": "Ton"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 2,
+                            "title": "Restoran",
+                            "layanan": [
+                                {
+                                    "id": 1,
+                                    "title": "Pemilahan Sampah",
+                                    "tarif": 39500,
+                                    "satuan": "Unit/Bulan"
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "Pengumpulan Sampah",
+                                    "tarif": 41,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 3,
+                                    "title": "Pengangkutan Sampah",
+                                    "tarif": 207,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 4,
+                                    "title": "Pengolahan Sampah",
+                                    "tarif": 217,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 5,
+                                    "title": "Pemrosesan Akhir",
+                                    "tarif": 249900,
+                                    "satuan": "Ton"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 3,
+                            "title": "Hotel",
+                            "layanan": [
+                                {
+                                    "id": 1,
+                                    "title": "Pengumpulan Sampah",
+                                    "tarif": 168,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "Pengangkutan Sampah",
+                                    "tarif": 207,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 3,
+                                    "title": "Pengolahan Sampah",
+                                    "tarif": 217,
+                                    "satuan": "Kg"
+                                },
+                                {
+                                    "id": 4,
+                                    "title": "Pemrosesan Akhir",
+                                    "tarif": 249900,
+                                    "satuan": "Ton"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "title": "industri",
+            "listrik": [
+                {
+                    "id": 1,
+                    "title": "<30.000 KVA",
+                    "layanan": [
+                        {
+                            "id": 1,
+                            "title": "Pemilahan dan Pengumpulan Sampah",
+                            "tarif": 418,
+                            "satuan": "Unit/Bulan"
+                        },
+                        {
+                            "id": 2,
+                            "title": "Pengangkutan Sampah",
+                            "tarif": 140,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 3,
+                            "title": "Pengolahan Sampah",
+                            "tarif": 217,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 4,
+                            "title": "Pengolahan PLTSa Merah Putih",
+                            "tarif": 468.1,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 5,
+                            "title": "Pemrosesan Akhir",
+                            "tarif": 249900,
+                            "satuan": "Ton"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "title": ">30.000 KVA",
+                    "layanan": [
+                        {
+                            "id": 1,
+                            "title": "Pemilahan dan Pengumpulan Sampah",
+                            "tarif": 613,
+                            "satuan": "Unit/Bulan"
+                        },
+                        {
+                            "id": 2,
+                            "title": "Pengangkutan Sampah",
+                            "tarif": 207,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 3,
+                            "title": "Pengolahan Sampah",
+                            "tarif": 217,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 4,
+                            "title": "Pengolahan PLTSa Merah Putih",
+                            "tarif": 468.1,
+                            "satuan": "Kg"
+                        },
+                        {
+                            "id": 5,
+                            "title": "Pemrosesan Akhir",
+                            "tarif": 249900,
+                            "satuan": "Ton"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
