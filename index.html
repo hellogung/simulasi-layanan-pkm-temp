@@ -321,7 +321,7 @@
                         <div id="preview-tarif-akhir"></div>
                       </div>
 
-                      <a href="#" class="btn btn-primary mt-4 w-100 fs-6"
+                      <a id="cta" target="_blank" href="https://api.whatsapp.com/send/?phone=6282211001180&text=Saya%20ingin%20bekerja%20sama%20dengan%20BLUD" class="btn btn-primary mt-4 w-100 fs-6"
                         >Ajukan Kerja Sama</a
                       >
                     </div>
@@ -507,7 +507,7 @@
                   $("#hasil-simulasi").show(300)
 
                   if ($(window).width() > 768) {
-                      $("html, body").animate({ scrollTop: 0 }, "slow")
+                      $("html, body").animate({ scrollTop: 100 }, "slow")
                   } else {
                       $('html, body').animate({
                           scrollTop: $('#hasil-simulasi').offset().top - 125 // Menggunakan offset top dari elemen target
@@ -532,6 +532,8 @@
                       renderTarifAkhir(user)
                   })
 
+                  callToAction()
+
               } catch (error) {
                   console.error(error.message);
                   toast.show(error.message, "danger")
@@ -548,10 +550,10 @@
                                   <input
                                   class="form-check-input"
                                   type="checkbox"
-                                  checked="true"
                                   value="${item.title}"
                                   name="layanan${item.id}"
                                   id="cbox${item.id}"
+                                  ${item.title == "Pengumpulan Sampah" || item.title == "Pengolahan Sampah" || item.title == "Pemilahan Sampah" || item.title == "Pemilahan dan Pengumpulan Sampah" ? "": "checked" }
                                   />
                                   <label class="form-check-label" for="cbox${item.id}">${item.title} (${item.satuan}) ${item.satuan.toLowerCase().includes(text) ? '<input type="number" id="input-unit" class="d-inline-block p-1 form-control text-center" style="width: 50px" value="1"/>' : ''}</label>
                               </div>
@@ -583,18 +585,19 @@
               const cbox = $("#detail-tarif-layanan input:checkbox")
               for (const item of cbox) {
                   $(item).on("click", (e) => {
-                      const cboxIsChecked = $("#detail-tarif-layanan input[type=checkbox]:checked")
-
-                      layananChecked = cboxIsChecked.map(function () {
-                          return $(this).val()
-                      }).get()
-                      kalkulasiTarif(layananChecked)
+                      kalkulasiTarif()
                   })
               }
 
 
-              function kalkulasiTarif(layananChecked = null) {
-                  $("#preview-tarif-akhir").html("") // Reset
+              function kalkulasiTarif() {
+                $("#preview-tarif-akhir").html("") // Reset
+
+                  const cboxIsChecked = $("#detail-tarif-layanan input[type=checkbox]:checked")
+                      const layananChecked = cboxIsChecked.map(function () {
+                          return $(this).val()
+                      }).get()
+                      
 
                   let totalTarif = 0
                   let tooltip = ""
@@ -604,12 +607,16 @@
                   for (const [index, item] of user.layanan.entries()) {
                       let tarif = 0
                       let isChecked = layananChecked != null ? $.inArray(item.title, layananChecked) !== -1 : true;
+                      let jumlahUnit = 0
 
-                                                  switch (item.title.toLowerCase()) {
+                      switch (item.title.toLowerCase()) {
                           case "pemilahan sampah":
                           case "pengumpulan sampah":
                           case "pemilahan dan pengumpulan sampah":
-                              const jumlahUnit = $("#input-unit").val() != "" ? parseInt($("#input-unit").val()) : 1
+                          // $("#input-unit").val() != "" || 
+                              if(isChecked){
+                                  jumlahUnit = $("#input-unit").val() !== undefined ? parseInt($("#input-unit").val()) : 1
+                                }
                               tarif = jumlahUnit != undefined ? item.tarif * jumlahUnit : item.tarif
                               tooltip = `Tarif ${item.title} = Rp ${item.tarif.toLocaleString("id-ID", options)} x ${jumlahUnit} Unit = Rp ${tarif.toLocaleString("id-ID", options)}`
                               break
@@ -631,7 +638,7 @@
                                                               <div class="d-flex justify-content-between ${isChecked ? "" : "text-decoration-line-through text-danger"}">
                                                                   <p class="mb-0 ${isChecked ? "" : "text-danger"}">${item.title} <span data-bs-toggle="tooltip" data-bs-animation="true" data-bs-placement="top" title="${tooltip}"><i class="fa-solid fa-circle-question"></i></span></p>
                                                                   <p class="mb-0 text-end ${isChecked ? "" : "text-danger"}" style="min-width: 35%;">Rp <span
-                                                                          id="tarif-akhir-${item.id}">${tarif.toLocaleString("id-ID", options)}</span>
+                                                                          id="tarif-akhir-${item.id}"}">${tarif.toLocaleString("id-ID", options)}</span>
                                                                   </p>
                                                               </div>
                                                               `
@@ -654,6 +661,27 @@
                                               `)
               }
 
+          }
+
+          function callToAction(){
+            const nomor = 6282211001180
+            const nama_perusahaan = $("#nama").val()
+            const email = $("#email").val()
+            const alamat = $("#alamat").val()
+            const jenis_kawasan = $("#preview-kawasan").text()
+            const skala_kawasan = $("#preview-skala-jenis-kawasan").text()
+            const daya_listrik = $("#listrik").val()
+            // const kondisi_sampah = $(":kondisi-sampah").val()
+            const kondisi_sampah = ""
+            const organik = $("#input-mudah-terurai").val() != "" ?  new Intl.NumberFormat("id-ID").format(parseInt($("#input-mudah-terurai").val())) : 0
+            const anorganik = $("#input-mudah-terurai").val() != "" ? new Intl.NumberFormat("id-ID").format(parseInt($("#input-daur-ulang").val())) : 0
+            const residu = new Intl.NumberFormat("id-ID").format(parseInt($("#sampah").val()))
+
+            const link = `
+            https://api.whatsapp.com/send?phone=${nomor}&text=*Saya%20ingin%20bekerja%20sama%20dengan%20BLUD*%0A%0ANama%20Perusahaan%3A%20${nama_perusahaan}%0AEmail%3A%20${email}%0AAlamat%3A%20${alamat}%0AJenis%20Kawasan%20%3D%20${jenis_kawasan}%2C%20${skala_kawasan}%2C%20%F0%9F%92%A1${daya_listrik}%0A%0A*Kondisi%20Sampah%20${kondisi_sampah}*%0AOrganik%3A%20${organik}%20kg%0AAnorganik%3A%20${anorganik}%20kg%0AResidu%3A%20${residu}%20kg
+            `
+
+            $("#cta").attr("href", link)
           }
       })
     </script>
