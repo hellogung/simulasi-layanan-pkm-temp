@@ -31,10 +31,15 @@
       <div class="container">
         <div class="row mb-2 gx-4 justify-content-center">
           <div class="col-12 col-md-11 col-lg-10">
-            <img src="./logo.png" style="filter: invert(1)" class="d-block mx-auto mb-3" width="100" height="100" alt="">
-            <h2
-              class="text-color-dark text-center fw-bold fs-1 mb-2 pt-0 mt-0"
-            >
+            <img
+              src="./logo.png"
+              style="filter: invert(1)"
+              class="d-block mx-auto mb-3"
+              width="100"
+              height="100"
+              alt=""
+            />
+            <h2 class="text-color-dark text-center fw-bold fs-1 mb-2 pt-0 mt-0">
               Hitung Tarif Pengelolaan Sampah Anda
             </h2>
             <div class="text-4 mt-5">
@@ -72,7 +77,7 @@
                             name="nama"
                             id="nama"
                             autocomplete="off"
-                          placeholder="Masukan Nama Perusahaan/Kawasan"
+                            placeholder="Masukan Nama Perusahaan/Kawasan"
                             required
                           />
                         </div>
@@ -321,7 +326,11 @@
                         <div id="preview-tarif-akhir"></div>
                       </div>
 
-                      <a id="cta" target="_blank" href="https://api.whatsapp.com/send/?phone=6282211001180&text=Saya%20ingin%20bekerja%20sama%20dengan%20BLUD" class="btn btn-primary mt-4 w-100 fs-6"
+                      <a
+                        id="cta"
+                        target="_blank"
+                        href="https://api.whatsapp.com/send/?phone=6282211001180&text=Saya%20ingin%20bekerja%20sama%20dengan%20BLUD"
+                        class="btn btn-primary mt-4 w-100 fs-6"
                         >Ajukan Kerja Sama</a
                       >
                     </div>
@@ -345,207 +354,291 @@
     <!-- <script src="/fetch.js"></script> -->
 
     <script>
-      const toast = new Toast()
+      const toast = new Toast();
 
       $(document).ready(async function () {
+        // Initiate Input
+        const kawasanInput = $("#kawasan");
+        const skalaInput = $("#skala-jenis");
+        const listrikInput = $("#listrik");
+        const sampahInput = $("#sampah");
 
-          // Initiate Input
-          const kawasanInput = $("#kawasan");
-          const skalaInput = $("#skala-jenis")
-          const listrikInput = $("#listrik");
-          const sampahInput = $("#sampah");
+        // Initiate Selected value from user
+        let selectedKawasan, selectedSkalaJenis, selectedListrik, valueSampah;
 
-          // Initiate Selected value from user
-          let selectedKawasan, selectedSkalaJenis, selectedListrik, valueSampah
+        // Initiate Data Information
+        let user = {};
 
-          // Initiate Data Information
-          let user = {}
+        let clicked = false;
 
-          // Get Data Tarif PKM
-          const data = await fetch("./tarif_pkm.json").then(res => res.json());
+        // Get Data Tarif PKM
+        const data = await fetch("./tarif_pkm.json").then((res) => res.json());
 
-          // Assign input jenis kawasan
-          kawasanInput.html("<option value=null hidden>Pilih jenis kawasan...</option>")
-          for (const item of data.jenis_kawasan) {
-              const el = `<option class="text-capitalize" value=${item.id}>${item.title}</option>`
-              kawasanInput.append(el)
+        // Assign input jenis kawasan
+        kawasanInput.html(
+          "<option value=null hidden>Pilih jenis kawasan...</option>"
+        );
+        for (const item of data.jenis_kawasan) {
+          const el = `<option class="text-capitalize" value=${item.id}>${item.title}</option>`;
+          kawasanInput.append(el);
+        }
+
+        // Handle Event Listener kawasan while on change
+        kawasanInput.on("change", function () {
+          selectedKawasan = data.jenis_kawasan.filter(
+            (data) => data.id == $(this).val()
+          )[0];
+
+          // Action when jenis kawasan selected "Perdagangan dan Jasa"
+          if (selectedKawasan.id == 3) {
+            $("#skala-jenis").parent().show(300);
+          } else {
+            skalaInput.html(
+              "<option value=null hidden>Pilih skala jenis kawasan...</option>"
+            );
+            $("#skala-jenis").parent().hide(300);
           }
 
-          // Handle Event Listener kawasan while on change
-          kawasanInput.on("change", function () {
-              selectedKawasan = data.jenis_kawasan.filter(data => data.id == $(this).val())[0]
+          // Assign input jenis listrik
+          listrikInput.html(
+            "<option value=null hidden>Pilih daya listrik...</option>"
+          );
+          for (const item of selectedKawasan.listrik) {
+            const el = `<option value=${item.id}>${item.title}</option>`;
+            listrikInput.append(el);
+          }
 
-              // Action when jenis kawasan selected "Perdagangan dan Jasa"
-              if (selectedKawasan.id == 3) {
-                  $("#skala-jenis").parent().show(300)
+          // Reset
+          selectedListrik = null;
+        });
+
+        // Handle Event Listener while on change
+        listrikInput.on("change", function () {
+          selectedListrik = selectedKawasan.listrik.filter(
+            (data) => data.id == $(this).val()
+          )[0];
+
+          // Action when jenis kawasan selected "Perdagangan dan Jasa"
+          if (selectedKawasan.id == 3) {
+            selectPerdaganganJasa =
+              selectedKawasan.listrik[0].skala_jenis_kawasan;
+
+            skalaInput.html(
+              "<option value=null hidden>Pilih skala jenis kawasan...</option>"
+            );
+            for (const item of selectPerdaganganJasa) {
+              const el = `<option class="text-capitalize" value=${item.id}>${item.title}</option>`;
+              skalaInput.append(el);
+            }
+          } else {
+            selectedSkalaJenis = "";
+          }
+        });
+
+        // Handle skala input on change
+        skalaInput.on("change", function () {
+          if (listrikInput.val() == "null") {
+            toast.show("Pilih daya listrik terlebih dahulu", "danger");
+          } else {
+            const tempSelectedListrik = selectedKawasan.listrik.filter(
+              (data) => data.id == listrikInput.val()
+            );
+            selectedSkalaJenis =
+              tempSelectedListrik[0].skala_jenis_kawasan.filter(
+                (data) => data.id == $(this).val()
+              )[0];
+          }
+        });
+
+        // Handle checkbox on change
+        $('input[name="konsidi-sampah"]').change(function () {
+          var selectedValue = $(this).val();
+
+          switch (selectedValue) {
+            case "1":
+              $("#input-mudah-terurai").parent().show(300);
+              $("#input-daur-ulang").parent().show(300);
+              break;
+            case "0":
+              $("#input-mudah-terurai").val("");
+              $("#input-daur-ulang").val("");
+
+              $("#input-mudah-terurai").parent().val("").hide(300);
+              $("#input-daur-ulang").parent().val("").hide(300);
+              break;
+          }
+        });
+
+        $("#form-simulasi").on("submit", async (e) => {
+          e.preventDefault(); // Mencegah refresh halaman
+
+          if (clicked == true) {
+            calculate();
+            return;
+          }
+
+          try {
+            await fetch("https://simulasi-api.vercel.app/api/simulasi", {
+              method: "POST",
+              body: JSON.stringify({
+                name: $("#nama").val(),
+                email: $("#email").val(),
+                alamat: $("#alamat").val(),
+                jenis_kawasan: $("#preview-kawasan").text(),
+                skala_jenis_kawasan: $("#preview-skala-jenis-kawasan").text(),
+                daya_listrik: $("#listrik").val(),
+                terpilah: true,
+                organik:
+                  $("#input-mudah-terurai").val() != ""
+                    ? new Intl.NumberFormat("id-ID").format(
+                        parseInt($("#input-mudah-terurai").val())
+                      )
+                    : 0,
+                anorganik:
+                  $("#input-mudah-terurai").val() != ""
+                    ? new Intl.NumberFormat("id-ID").format(
+                        parseInt($("#input-daur-ulang").val())
+                      )
+                    : 0,
+                residu: new Intl.NumberFormat("id-ID").format(
+                  parseInt($("#sampah").val())
+                ),
+              }),
+            })
+              .then((res) => res.json())
+              .then((res) => console.log(res))
+              .then((res) => {
+                calculate();
+              });
+          } catch (error) {
+            console.error(error.message);
+            toast.show(error.message, "danger");
+          }
+
+          function calculate() {
+            const formData = new FormData($("#form-simulasi")[0]);
+
+            const valueBeratSampah = [...formData].filter(
+              (item) => item[0] == "sampah"
+            )[0][1];
+            const valuemudahTerurai = [...formData].filter(
+              (item) => item[0] == "input-mudah-terurai"
+            )[0][1];
+            const valueDaurUlang = [...formData].filter(
+              (item) => item[0] == "input-daur-ulang"
+            )[0][1];
+
+            if (!selectedKawasan) {
+              throw new Error("Kawasan harus diisi ");
+            }
+
+            if (!selectedListrik) {
+              $("#preview-listrik").text("");
+              throw new Error("Daya listrik harus diisi ");
+            }
+
+            // Assign data from form into object user
+            user.jenis_kawasan = selectedKawasan.title;
+            user.daya_listrik = selectedListrik.title
+              ? selectedListrik.title
+              : undefined;
+            user.skala_jenis_kawasan =
+              selectedSkalaJenis.title == undefined
+                ? ""
+                : `(${selectedSkalaJenis.title})`;
+            user.sampah = parseFloat(valueBeratSampah);
+            user.mudah_terurai =
+              valuemudahTerurai != "" ? parseFloat(valuemudahTerurai) : 0;
+            user.daur_ulang =
+              valueDaurUlang != "" ? parseFloat(valueDaurUlang) : 0;
+
+            if (kawasanInput.val() == "3") {
+              if (parseInt($("#skala-jenis").val()) == 3) {
+                user.layanan = [
+                  selectedSkalaJenis.layanan[0],
+                  selectedSkalaJenis.layanan[1],
+                  selectedSkalaJenis.layanan[2],
+                  selectedSkalaJenis.layanan[3],
+                ];
               } else {
-                  skalaInput.html("<option value=null hidden>Pilih skala jenis kawasan...</option>")
-                  $("#skala-jenis").parent().hide(300)
+                user.layanan = [
+                  selectedSkalaJenis.layanan[0],
+                  selectedSkalaJenis.layanan[1],
+                  selectedSkalaJenis.layanan[2],
+                  selectedSkalaJenis.layanan[3],
+                  selectedSkalaJenis.layanan[4],
+                ];
               }
+            } else if (kawasanInput.val() == "4") {
+              user.layanan = [
+                selectedListrik.layanan[0],
+                selectedListrik.layanan[1],
+                selectedListrik.layanan[2],
+                selectedListrik.layanan[4],
+              ];
+            } else {
+              user.layanan = [
+                selectedListrik.layanan[0],
+                selectedListrik.layanan[1],
+                selectedListrik.layanan[2],
+                selectedListrik.layanan[4],
+              ];
+            }
 
-              // Assign input jenis listrik
-              listrikInput.html("<option value=null hidden>Pilih daya listrik...</option>")
-              for (const item of selectedKawasan.listrik) {
-                  const el = `<option value=${item.id}>${item.title}</option>`
-                  listrikInput.append(el)
-              }
+            $("#hasil-simulasi").show(300);
 
-              // Reset
-              selectedListrik = null
-          })
+            if ($(window).width() > 768) {
+              $("html, body").animate({ scrollTop: 100 }, "slow");
+            } else {
+              $("html, body").animate(
+                {
+                  scrollTop: $("#hasil-simulasi").offset().top - 125, // Menggunakan offset top dari elemen target
+                },
+                "slow"
+              );
+            }
 
-          // Handle Event Listener while on change
-          listrikInput.on("change", function () {
-              selectedListrik = selectedKawasan.listrik.filter(data => data.id == $(this).val())[0]
+            // Assign data into preview
+            $("#preview-kawasan").text(user.jenis_kawasan);
+            $("#preview-skala-jenis-kawasan").text(
+              `${user.skala_jenis_kawasan}`
+            );
+            $("#preview-listrik").text(user.daya_listrik);
+            $("#preview-sampah").text(
+              (
+                user.sampah +
+                user.mudah_terurai +
+                user.daur_ulang
+              ).toLocaleString("id-ID")
+            );
 
-              // Action when jenis kawasan selected "Perdagangan dan Jasa"
-              if (selectedKawasan.id == 3) {
-                  selectPerdaganganJasa = selectedKawasan.listrik[0].skala_jenis_kawasan
+            // render
+            renderTarifLayanan(user);
+            renderTarifAkhir(user);
 
-                  skalaInput.html("<option value=null hidden>Pilih skala jenis kawasan...</option>")
-                  for (const item of selectPerdaganganJasa) {
-                      const el = `<option class="text-capitalize" value=${item.id}>${item.title}</option>`
-                      skalaInput.append(el)
-                  }
-              } else {
-                  selectedSkalaJenis = ''
-              }
-          })
+            // Event ketika input jumlah unit berubah
+            $("#input-unit").keyup(function () {
+              renderTarifAkhir(user);
+            });
+            $("#input-unit").change(function () {
+              renderTarifAkhir(user);
+            });
 
-          // Handle skala input on change
-          skalaInput.on("change", function () {
-              if (listrikInput.val() == "null") {
-                  toast.show("Pilih daya listrik terlebih dahulu", "danger")
-              } else {
-                  const tempSelectedListrik = selectedKawasan.listrik.filter(data => data.id == listrikInput.val())
-                  selectedSkalaJenis = tempSelectedListrik[0].skala_jenis_kawasan.filter(data => data.id == $(this).val())[0]
-              }
-          })
+            callToAction();
+            clicked = true;
+          }
+        });
 
-          // Handle checkbox on change
-          $('input[name="konsidi-sampah"]').change(function () {
-              var selectedValue = $(this).val();
-
-              switch (selectedValue) {
-                  case "1":
-                      $("#input-mudah-terurai").parent().show(300)
-                      $("#input-daur-ulang").parent().show(300)
-                      break
-                  case "0":
-                      $("#input-mudah-terurai").val("")
-                      $("#input-daur-ulang").val("")
-
-                      $("#input-mudah-terurai").parent().val("").hide(300)
-                      $("#input-daur-ulang").parent().val("").hide(300)
-                      break
-              }
-          });
-
-          $("#form-simulasi").on("submit", (e) => {
-              e.preventDefault(); // Mencegah refresh halaman
-
-              try {
-                  const formData = new FormData($("#form-simulasi")[0]);
-
-                  const valueBeratSampah = [...formData].filter(item => item[0] == "sampah")[0][1]
-                  const valuemudahTerurai = [...formData].filter(item => item[0] == "input-mudah-terurai")[0][1]
-                  const valueDaurUlang = [...formData].filter(item => item[0] == "input-daur-ulang")[0][1]
-
-                  if (!selectedKawasan) {
-                      throw new Error('Kawasan harus diisi ')
-                  }
-
-                  if (!selectedListrik) {
-                      $("#preview-listrik").text("")
-                      throw new Error('Daya listrik harus diisi ')
-                  }
-
-                  // Assign data from form into object user
-                  user.jenis_kawasan = selectedKawasan.title
-                  user.daya_listrik = selectedListrik.title ? selectedListrik.title : undefined
-                  user.skala_jenis_kawasan = selectedSkalaJenis.title == undefined ? "" : `(${selectedSkalaJenis.title})`
-                  user.sampah = parseFloat(valueBeratSampah)
-                  user.mudah_terurai = valuemudahTerurai != "" ? parseFloat(valuemudahTerurai) : 0
-                  user.daur_ulang = valueDaurUlang != "" ? parseFloat(valueDaurUlang) : 0
-
-                  if (kawasanInput.val() == "3") {
-                      if (parseInt($("#skala-jenis").val()) == 3) {
-                          user.layanan = [
-                              selectedSkalaJenis.layanan[0],
-                              selectedSkalaJenis.layanan[1],
-                              selectedSkalaJenis.layanan[2],
-                              selectedSkalaJenis.layanan[3],
-                          ];
-                      } else {
-                          user.layanan = [
-                              selectedSkalaJenis.layanan[0],
-                              selectedSkalaJenis.layanan[1],
-                              selectedSkalaJenis.layanan[2],
-                              selectedSkalaJenis.layanan[3],
-                              selectedSkalaJenis.layanan[4],
-                          ];
-                      }
-                  } else if (kawasanInput.val() == "4") {
-                      user.layanan = [
-                          selectedListrik.layanan[0],
-                          selectedListrik.layanan[1],
-                          selectedListrik.layanan[2],
-                          selectedListrik.layanan[4]
-                      ];
-                  }
-                  else {
-                      user.layanan = [
-                          selectedListrik.layanan[0],
-                          selectedListrik.layanan[1],
-                          selectedListrik.layanan[2],
-                          selectedListrik.layanan[4]
-                      ];
-                  }
-
-
-
-                  $("#hasil-simulasi").show(300)
-
-                  if ($(window).width() > 768) {
-                      $("html, body").animate({ scrollTop: 100 }, "slow")
-                  } else {
-                      $('html, body').animate({
-                          scrollTop: $('#hasil-simulasi').offset().top - 125 // Menggunakan offset top dari elemen target
-                      }, 'slow');
-                  }
-
-                  // Assign data into preview
-                  $("#preview-kawasan").text(user.jenis_kawasan)
-                  $("#preview-skala-jenis-kawasan").text(`${user.skala_jenis_kawasan}`)
-                  $("#preview-listrik").text(user.daya_listrik)
-                  $("#preview-sampah").text((user.sampah + user.mudah_terurai + user.daur_ulang).toLocaleString('id-ID'))
-
-                  // render
-                  renderTarifLayanan(user)
-                  renderTarifAkhir(user)
-
-                  // Event ketika input jumlah unit berubah
-                  $("#input-unit").keyup(function () {
-                      renderTarifAkhir(user)
-                  })
-                  $("#input-unit").change(function () {
-                      renderTarifAkhir(user)
-                  })
-
-                  callToAction()
-
-              } catch (error) {
-                  console.error(error.message);
-                  toast.show(error.message, "danger")
-              }
-          });
-
-          function renderTarifLayanan(user) {
-              $("#detail-tarif-layanan").html("") // Reset
-              for (const [index, item] of user.layanan.entries()) {
-                  const text = "unit"
-                          const el = `
-                          <div class="d-flex justify-content-between ${index == (user.layanan).length - 1 ? '' : 'border-bottom'}">
+        function renderTarifLayanan(user) {
+          $("#detail-tarif-layanan").html(""); // Reset
+          for (const [index, item] of user.layanan.entries()) {
+            const text = "unit";
+            const el = `
+                          <div class="d-flex justify-content-between ${
+                            index == user.layanan.length - 1
+                              ? ""
+                              : "border-bottom"
+                          }">
                               <div class="form-check mt-1">
                                   <input
                                   class="form-check-input"
@@ -553,137 +646,242 @@
                                   value="${item.title}"
                                   name="layanan${item.id}"
                                   id="cbox${item.id}"
-                                  ${item.title == "Pengumpulan Sampah" || item.title == "Pengolahan Sampah" || item.title == "Pemilahan Sampah" || item.title == "Pemilahan dan Pengumpulan Sampah" ? "": "checked" }
+                                  ${
+                                    item.title == "Pengumpulan Sampah" ||
+                                    item.title == "Pengolahan Sampah" ||
+                                    item.title == "Pemilahan Sampah" ||
+                                    item.title ==
+                                      "Pemilahan dan Pengumpulan Sampah"
+                                      ? ""
+                                      : "checked"
+                                  }
                                   />
-                                  <label class="form-check-label" for="cbox${item.id}">${item.title} (${item.satuan}) ${item.satuan.toLowerCase().includes(text) ? '<input type="number" id="input-unit" class="d-inline-block p-1 form-control text-center" style="width: 50px" value="1"/>' : ''}</label>
+                                  <label class="form-check-label" for="cbox${
+                                    item.id
+                                  }">${item.title} (${item.satuan}) ${
+              item.satuan.toLowerCase().includes(text)
+                ? '<input type="number" id="input-unit" class="d-inline-block p-1 form-control text-center" style="width: 50px" value="1"/>'
+                : ""
+            }</label>
                               </div>
-                              <p id="preview-tarif-pemilahan" class="mb-1 text-end" style="min-width: 25%">Rp ${item.tarif.toLocaleString("id-ID")}</p>
+                              <p id="preview-tarif-pemilahan" class="mb-1 text-end" style="min-width: 25%">Rp ${item.tarif.toLocaleString(
+                                "id-ID"
+                              )}</p>
                           </div>
-                          `
-                  $("#detail-tarif-layanan").append(el)
-              }
+                          `;
+            $("#detail-tarif-layanan").append(el);
+          }
+        }
+
+        function renderTarifAkhir(user) {
+          // Initiate and assign berat sampah
+          const mudah_terurai = parseFloat(user.mudah_terurai);
+          const daur_ulang = parseFloat(user.daur_ulang);
+          const residu = parseFloat(user.sampah);
+          const total = mudah_terurai + daur_ulang + residu;
+
+          const options = {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          };
+
+          // Render berat sampah into html
+          $("#sampah-mudah-terurai").text(
+            mudah_terurai.toLocaleString("id-ID", options)
+          );
+          $("#sampah-daur-ulang").text(
+            daur_ulang.toLocaleString("id-ID", options)
+          );
+          $("#sampah-residu").text(residu.toLocaleString("id-ID", options));
+          $("#sampah-total").text(total.toLocaleString("id-ID", options));
+
+          kalkulasiTarif();
+
+          let layananChecked = [];
+          const cbox = $("#detail-tarif-layanan input:checkbox");
+          for (const item of cbox) {
+            $(item).on("click", (e) => {
+              kalkulasiTarif();
+            });
           }
 
-          function renderTarifAkhir(user) {
-              // Initiate and assign berat sampah
-              const mudah_terurai = parseFloat(user.mudah_terurai)
-              const daur_ulang = parseFloat(user.daur_ulang)
-              const residu = parseFloat(user.sampah)
-              const total = mudah_terurai + daur_ulang + residu
+          function kalkulasiTarif() {
+            $("#preview-tarif-akhir").html(""); // Reset
 
-              const options = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+            const cboxIsChecked = $(
+              "#detail-tarif-layanan input[type=checkbox]:checked"
+            );
+            const layananChecked = cboxIsChecked
+              .map(function () {
+                return $(this).val();
+              })
+              .get();
 
-              // Render berat sampah into html
-              $("#sampah-mudah-terurai").text((mudah_terurai).toLocaleString('id-ID', options))
-              $("#sampah-daur-ulang").text((daur_ulang).toLocaleString('id-ID', options))
-              $("#sampah-residu").text(residu.toLocaleString('id-ID', options))
-              $("#sampah-total").text(total.toLocaleString('id-ID', options))
+            let totalTarif = 0;
+            let tooltip = "";
 
-              kalkulasiTarif()
+            const options = {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            };
 
-              let layananChecked = []
-              const cbox = $("#detail-tarif-layanan input:checkbox")
-              for (const item of cbox) {
-                  $(item).on("click", (e) => {
-                      kalkulasiTarif()
-                  })
+            for (const [index, item] of user.layanan.entries()) {
+              let tarif = 0;
+              let isChecked =
+                layananChecked != null
+                  ? $.inArray(item.title, layananChecked) !== -1
+                  : true;
+              let jumlahUnit = 0;
+
+              switch (item.title.toLowerCase()) {
+                case "pemilahan sampah":
+                case "pengumpulan sampah":
+                case "pemilahan dan pengumpulan sampah":
+                  // $("#input-unit").val() != "" ||
+                  if (isChecked) {
+                    jumlahUnit =
+                      $("#input-unit").val() !== undefined
+                        ? parseInt($("#input-unit").val())
+                        : 1;
+                  }
+                  tarif =
+                    jumlahUnit != undefined
+                      ? item.tarif * jumlahUnit
+                      : item.tarif;
+                  tooltip = `Tarif ${
+                    item.title
+                  } = Rp ${item.tarif.toLocaleString(
+                    "id-ID",
+                    options
+                  )} x ${jumlahUnit} Unit = Rp ${tarif.toLocaleString(
+                    "id-ID",
+                    options
+                  )}`;
+                  break;
+                case "pengangkutan sampah":
+                  tarif = item.tarif * total;
+                  tooltip = `Tarif ${
+                    item.title
+                  } x Total berat sampah = Rp ${item.tarif.toLocaleString(
+                    "id-ID",
+                    options
+                  )} x ${total.toLocaleString(
+                    "id-ID",
+                    options
+                  )} Kg = Rp ${tarif.toLocaleString("id-ID", options)}`;
+                  break;
+                case "pengolahan sampah":
+                  tarif = item.tarif * (mudah_terurai + daur_ulang);
+                  tooltip = `Tarif ${
+                    item.title
+                  } x Sampah Terolah (Mudah Terurai + Daur Ulang) = Rp ${item.tarif.toLocaleString(
+                    "id-ID",
+                    options
+                  )} x ${(mudah_terurai + daur_ulang).toLocaleString(
+                    "id-ID",
+                    options
+                  )} Kg = Rp ${tarif.toLocaleString("id-ID", options)}`;
+                  break;
+                case "pemrosesan akhir":
+                  tarif = (item.tarif / 1000) * residu;
+                  tooltip = `Tarif ${
+                    item.title
+                  } x Sampah residu = Rp ${item.tarif.toLocaleString(
+                    "id-ID",
+                    options
+                  )} x ${residu.toLocaleString(
+                    "id-ID",
+                    options
+                  )} Kg = Rp ${tarif.toLocaleString("id-ID", options)}`;
+                  break;
               }
 
-
-              function kalkulasiTarif() {
-                $("#preview-tarif-akhir").html("") // Reset
-
-                  const cboxIsChecked = $("#detail-tarif-layanan input[type=checkbox]:checked")
-                      const layananChecked = cboxIsChecked.map(function () {
-                          return $(this).val()
-                      }).get()
-                      
-
-                  let totalTarif = 0
-                  let tooltip = ""
-
-                  const options = { minimumFractionDigits: 0, maximumFractionDigits: 2 }
-
-                  for (const [index, item] of user.layanan.entries()) {
-                      let tarif = 0
-                      let isChecked = layananChecked != null ? $.inArray(item.title, layananChecked) !== -1 : true;
-                      let jumlahUnit = 0
-
-                      switch (item.title.toLowerCase()) {
-                          case "pemilahan sampah":
-                          case "pengumpulan sampah":
-                          case "pemilahan dan pengumpulan sampah":
-                          // $("#input-unit").val() != "" || 
-                              if(isChecked){
-                                  jumlahUnit = $("#input-unit").val() !== undefined ? parseInt($("#input-unit").val()) : 1
-                                }
-                              tarif = jumlahUnit != undefined ? item.tarif * jumlahUnit : item.tarif
-                              tooltip = `Tarif ${item.title} = Rp ${item.tarif.toLocaleString("id-ID", options)} x ${jumlahUnit} Unit = Rp ${tarif.toLocaleString("id-ID", options)}`
-                              break
-                          case "pengangkutan sampah":
-                              tarif = item.tarif * total
-                              tooltip = `Tarif ${item.title} x Total berat sampah = Rp ${item.tarif.toLocaleString("id-ID", options)} x ${total.toLocaleString("id-ID", options)} Kg = Rp ${tarif.toLocaleString("id-ID", options)}`
-                              break
-                          case "pengolahan sampah":
-                              tarif = item.tarif * (mudah_terurai + daur_ulang)
-                              tooltip = `Tarif ${item.title} x Sampah Terolah (Mudah Terurai + Daur Ulang) = Rp ${item.tarif.toLocaleString("id-ID", options)} x ${(mudah_terurai + daur_ulang).toLocaleString("id-ID", options)} Kg = Rp ${tarif.toLocaleString("id-ID", options)}`
-                              break
-                          case "pemrosesan akhir":
-                              tarif = (item.tarif / 1000) * residu
-                              tooltip = `Tarif ${item.title} x Sampah residu = Rp ${item.tarif.toLocaleString("id-ID", options)} x ${residu.toLocaleString("id-ID", options)} Kg = Rp ${tarif.toLocaleString("id-ID", options)}`
-                              break
-                      }
-
-                      const el = `
-                                                              <div class="d-flex justify-content-between ${isChecked ? "" : "text-decoration-line-through text-danger"}">
-                                                                  <p class="mb-0 ${isChecked ? "" : "text-danger"}">${item.title} <span data-bs-toggle="tooltip" data-bs-animation="true" data-bs-placement="top" title="${tooltip}"><i class="fa-solid fa-circle-question"></i></span></p>
-                                                                  <p class="mb-0 text-end ${isChecked ? "" : "text-danger"}" style="min-width: 35%;">Rp <span
-                                                                          id="tarif-akhir-${item.id}"}">${tarif.toLocaleString("id-ID", options)}</span>
+              const el = `
+                                                              <div class="d-flex justify-content-between ${
+                                                                isChecked
+                                                                  ? ""
+                                                                  : "text-decoration-line-through text-danger"
+                                                              }">
+                                                                  <p class="mb-0 ${
+                                                                    isChecked
+                                                                      ? ""
+                                                                      : "text-danger"
+                                                                  }">${
+                item.title
+              } <span data-bs-toggle="tooltip" data-bs-animation="true" data-bs-placement="top" title="${tooltip}"><i class="fa-solid fa-circle-question"></i></span></p>
+                                                                  <p class="mb-0 text-end ${
+                                                                    isChecked
+                                                                      ? ""
+                                                                      : "text-danger"
+                                                                  }" style="min-width: 35%;">Rp <span
+                                                                          id="tarif-akhir-${
+                                                                            item.id
+                                                                          }"}">${tarif.toLocaleString(
+                "id-ID",
+                options
+              )}</span>
                                                                   </p>
                                                               </div>
-                                                              `
+                                                              `;
 
-                      if (layananChecked === null) {
-                          totalTarif += tarif
-                      } else {
-                          isChecked ? totalTarif += tarif : null;
-                      }
-                      $("#preview-tarif-akhir").append(el)
-                  }
+              if (layananChecked === null) {
+                totalTarif += tarif;
+              } else {
+                isChecked ? (totalTarif += tarif) : null;
+              }
+              $("#preview-tarif-akhir").append(el);
+            }
 
-                  $("#preview-tarif-akhir").append(`
+            $("#preview-tarif-akhir").append(`
                                               <div class="d-flex justify-content-between">
                                                   <p class="mb-0 fw-semibold fs-6">Total Tarif</p>
                                                   <p class="mb-0 fw-semibold fs-6 text-end" style="min-width: 35%;">Rp <span
-                                                          id="tarif-akhir-total">${totalTarif.toLocaleString("id-ID", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                                                          id="tarif-akhir-total">${totalTarif.toLocaleString(
+                                                            "id-ID",
+                                                            {
+                                                              minimumFractionDigits: 0,
+                                                              maximumFractionDigits: 2,
+                                                            }
+                                                          )}</span>
                                                   </p>
                                               </div>
-                                              `)
-              }
-
+                                              `);
           }
+        }
 
-          function callToAction(){
-            const nomor = 6282211001180
-            const nama_perusahaan = $("#nama").val()
-            const email = $("#email").val()
-            const alamat = $("#alamat").val()
-            const jenis_kawasan = $("#preview-kawasan").text()
-            const skala_kawasan = $("#preview-skala-jenis-kawasan").text()
-            const daya_listrik = $("#listrik").val()
-            // const kondisi_sampah = $(":kondisi-sampah").val()
-            const kondisi_sampah = ""
-            const organik = $("#input-mudah-terurai").val() != "" ?  new Intl.NumberFormat("id-ID").format(parseInt($("#input-mudah-terurai").val())) : 0
-            const anorganik = $("#input-mudah-terurai").val() != "" ? new Intl.NumberFormat("id-ID").format(parseInt($("#input-daur-ulang").val())) : 0
-            const residu = new Intl.NumberFormat("id-ID").format(parseInt($("#sampah").val()))
+        function callToAction() {
+          const nomor = 6282211001180;
+          const nama_perusahaan = $("#nama").val();
+          const email = $("#email").val();
+          const alamat = $("#alamat").val();
+          const jenis_kawasan = $("#preview-kawasan").text();
+          const skala_kawasan = $("#preview-skala-jenis-kawasan").text();
+          const daya_listrik = $("#listrik").val();
+          // const kondisi_sampah = $(":kondisi-sampah").val()
+          const kondisi_sampah = "";
+          const organik =
+            $("#input-mudah-terurai").val() != ""
+              ? new Intl.NumberFormat("id-ID").format(
+                  parseInt($("#input-mudah-terurai").val())
+                )
+              : 0;
+          const anorganik =
+            $("#input-mudah-terurai").val() != ""
+              ? new Intl.NumberFormat("id-ID").format(
+                  parseInt($("#input-daur-ulang").val())
+                )
+              : 0;
+          const residu = new Intl.NumberFormat("id-ID").format(
+            parseInt($("#sampah").val())
+          );
 
-            const link = `
+          const link = `
             https://api.whatsapp.com/send?phone=${nomor}&text=*Saya%20ingin%20bekerja%20sama%20dengan%20BLUD*%0A%0ANama%20Perusahaan%3A%20${nama_perusahaan}%0AEmail%3A%20${email}%0AAlamat%3A%20${alamat}%0AJenis%20Kawasan%20%3D%20${jenis_kawasan}%2C%20${skala_kawasan}%2C%20%F0%9F%92%A1${daya_listrik}%0A%0A*Kondisi%20Sampah%20${kondisi_sampah}*%0AOrganik%3A%20${organik}%20kg%0AAnorganik%3A%20${anorganik}%20kg%0AResidu%3A%20${residu}%20kg
-            `
+            `;
 
-            $("#cta").attr("href", link)
-          }
-      })
+          $("#cta").attr("href", link);
+        }
+      });
     </script>
   </body>
 </html>
