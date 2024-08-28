@@ -490,13 +490,13 @@
                 terpilah: $('input[name="konsidi-sampah"]:checked').val() === "1",
                 organik:
                   $("#input-mudah-terurai").val() != ""
-                    ? parseInt($("#input-mudah-terurai").val())
+                    ? parseFloat($("#input-mudah-terurai").val())
                     : 0,
                 anorganik:
                   $("#input-mudah-terurai").val() != ""
-                    ? parseInt($("#input-daur-ulang").val())
+                    ? parseFloat($("#input-daur-ulang").val())
                     : 0,
-                residu: parseInt($("#sampah").val()),
+                residu: parseFloat($("#sampah").val()),
               }),
             })
               .then((res) => res.json())
