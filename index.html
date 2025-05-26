@@ -478,33 +478,35 @@
           }
 
           try {
-            await fetch("https://simulasi-api.vercel.app/api/simulasi", {
-              method: "POST",
-              body: JSON.stringify({
-                name: $("#nama").val(),
-                email: $("#email").val(),
-                alamat: $("#alamat").val(),
-                jenis_kawasan: selectedKawasan.title,
-                skala_jenis_kawasan: selectedSkalaJenis.title,
-                daya_listrik: selectedListrik.title,
-                terpilah: $('input[name="konsidi-sampah"]:checked').val() === "1",
-                organik:
-                  $("#input-mudah-terurai").val() != ""
-                    ? parseFloat($("#input-mudah-terurai").val())
-                    : 0,
-                anorganik:
-                  $("#input-mudah-terurai").val() != ""
-                    ? parseFloat($("#input-daur-ulang").val())
-                    : 0,
-                residu: parseFloat($("#sampah").val()),
-              }),
-            })
-              .then((res) => res.json())
-              .then((res) => console.log(res))
-              .then((res) => {
-                calculate();
-                clicked = true;
-              });
+            // await fetch("https://simulasi-api.vercel.app/api/simulasi", {
+            //   method: "POST",
+            //   body: JSON.stringify({
+            //     name: $("#nama").val(),
+            //     email: $("#email").val(),
+            //     alamat: $("#alamat").val(),
+            //     jenis_kawasan: selectedKawasan.title,
+            //     skala_jenis_kawasan: selectedSkalaJenis.title,
+            //     daya_listrik: selectedListrik.title,
+            //     terpilah: $('input[name="konsidi-sampah"]:checked').val() === "1",
+            //     organik:
+            //       $("#input-mudah-terurai").val() != ""
+            //         ? parseFloat($("#input-mudah-terurai").val())
+            //         : 0,
+            //     anorganik:
+            //       $("#input-mudah-terurai").val() != ""
+            //         ? parseFloat($("#input-daur-ulang").val())
+            //         : 0,
+            //     residu: parseFloat($("#sampah").val()),
+            //   }),
+            // })
+            //   .then((res) => res.json())
+            //   .then((res) => console.log(res))
+            //   .then((res) => {
+            //     calculate();
+            //     clicked = true;
+            //   });
+            calculate();
+            clicked = true;
           } catch (error) {
             console.error(error.message);
             toast.show(error.message, "danger");
